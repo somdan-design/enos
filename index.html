@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
-    <title>E.No.S v1.82 (Text Only)</title>
+    <title>E.No.S v2.03 (Text Only)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -219,6 +219,140 @@ html.dark .keyword-tag.active {
     box-shadow: 0 0 5px rgba(99, 102, 241, 0.5) !important; /* 은은한 광원 효과 */
 }
 
+/* ▼▼▼ [수정] 선택지(리스트) 줄바꿈 정렬 개선 ▼▼▼ */
+
+/* 1. 리스트 마커(숫자)를 텍스트 영역 밖으로 뺌 */
+.novel-text ol, .novel-text ul {
+    list-style-position: outside !important; 
+    padding-left: 1.8rem !important; /* 숫자 들어갈 공간 확보 */
+    margin-left: 0.2rem !important;
+}
+
+/* 2. 리스트 내부 간격 조정 */
+.novel-text li {
+    margin-bottom: 0.4rem !important; /* 항목 간 간격 넓힘 (가독성) */
+    padding-left: 0.3rem !important;  /* 텍스트와 숫자 사이 간격 */
+}
+
+/* ▼▼▼ [수정] 선택지(리스트) 줄바꿈 정렬 개선 ▼▼▼ */
+.novel-text li p {
+    display: block !important; 
+    margin: 0 !important;
+}
+
+/* ▼▼▼ [신규] 1단계: 오른쪽 사이드바 리팩토링 스타일 ▼▼▼ */
+.right-tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+.right-tab-btn:hover { background-color: #f8fafc; color: #475569; }
+.right-tab-btn.active {
+    color: #4f46e5;
+    border-bottom-color: #4f46e5;
+    background-color: #fff;
+}
+html.dark .right-tab-btn { color: #94a3b8; }
+html.dark .right-tab-btn:hover { background-color: #1e293b; color: #cbd5e1; }
+html.dark .right-tab-btn.active { color: #818cf8; border-bottom-color: #818cf8; background-color: #0f172a; }
+
+.setting-group-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+html.dark .setting-group-label { color: #94a3b8; }
+
+.sidebar-select {
+    width: 100%;
+    padding: 0.4rem;
+    font-size: 0.85rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.375rem;
+    background-color: white;
+    color: #334155;
+}
+html.dark .sidebar-select {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+}
+/* ▲▲▲ 1단계 스타일 끝 ▲▲▲ */
+
+/* ▼▼▼ [수정됨] 2단계: 안전한 리사이즈 핸들 스타일 ▼▼▼ */
+
+/* 1. 리사이즈 핸들 디자인 */
+.resize-grip {
+    height: 12px; /* 높이 약간 줄임 (공간 절약) */
+    background-color: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: row-resize;
+    touch-action: none; /* 터치 스크롤 방지 */
+    user-select: none;
+    flex-shrink: 0; /* 높이 줄어듦 방지 */
+}
+.resize-grip i {
+    width: 30px;
+    height: 3px;
+    background-color: #cbd5e1;
+    border-radius: 2px;
+    display: block;
+}
+
+html.dark .resize-grip {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+html.dark .resize-grip i { background-color: #475569; }
+
+/* 2. 입력창 래퍼 (레이아웃 보호용) */
+.resizable-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;         /* 남은 공간 차지 */
+    min-width: 0;    /* 플렉스 박스 넘침 방지 */
+    position: relative;
+}
+
+/* 3. 사이드바 터치 영역 확장 (가상 요소) */
+#sidebar::after, #right-sidebar::before {
+    content: ''; position: absolute; top: 0; width: 20px; height: 100%; z-index: 50;
+    pointer-events: none; /* 드래그 구현 전까지는 클릭 통과 */
+}
+#sidebar::after { right: -10px; }
+#right-sidebar::before { left: -10px; }
+
+/* ▼▼▼ [필수] 리사이즈 핸들 스타일 (없으면 style 태그 맨 아래에 추가하세요) ▼▼▼ */
+.resize-grip {
+    height: 12px;
+    background-color: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: row-resize;
+    touch-action: none;
+    user-select: none;
+    flex-shrink: 0;
+}
+.resize-grip i { width: 30px; height: 3px; background-color: #cbd5e1; border-radius: 2px; display: block; }
+html.dark .resize-grip { background-color: #1e293b; border-color: #334155; }
+html.dark .resize-grip i { background-color: #475569; }
+
+.resizable-wrapper {
+    display: flex; flex-direction: column; flex: 1; min-width: 0; position: relative;
+}
+
     </style>
 </head>
 
@@ -227,7 +361,7 @@ html.dark .keyword-tag.active {
 
     <aside id="sidebar" class="bg-white border-r border-gray-200 flex flex-col h-full shadow-xl">
         <div class="p-4 border-b border-gray-100 bg-indigo-600 text-white flex justify-between items-center flex-shrink-0">
-            <h1 class="font-bold text-lg"><i class="fa-solid fa-book-open mr-2"></i>E.No.S v1.82</h1>
+            <h1 class="font-bold text-lg"><i class="fa-solid fa-book-open mr-2"></i>E.No.S v2.03</h1>
             <button onclick="closeAllSidebars()" class="text-white md:hidden"><i class="fa-solid fa-times text-xl"></i></button>
         </div>
         <div class="flex text-sm border-b border-gray-200 bg-gray-50 flex-shrink-0">
@@ -268,7 +402,7 @@ html.dark .keyword-tag.active {
                 <button onclick="toggleSidebar()" class="text-gray-600 mr-1 p-2 rounded hover:bg-gray-100 z-50 relative"><i class="fa-solid fa-bars text-xl"></i></button>
 <div class="flex flex-col overflow-hidden w-full">
     <div class="flex items-center gap-2 cursor-pointer group" onclick="editChatTitle()" title="클릭하여 제목 수정">
-        <h2 id="header-title" class="font-bold text-gray-800 truncate group-hover:text-indigo-600 transition">E.No.S v1.82</h2>
+        <h2 id="header-title" class="font-bold text-gray-800 truncate group-hover:text-indigo-600 transition">E.No.S v2.03</h2>
         <i class="fa-solid fa-pen text-xs text-gray-400 group-hover:text-indigo-600 transition flex-shrink-0"></i>
     </div>
 
@@ -292,8 +426,8 @@ html.dark .keyword-tag.active {
 <footer id="input-area" class="pt-2 px-4 bg-white border-t border-gray-200 hidden flex-col flex-shrink-0 z-50">
             <form id="chat-form" onsubmit="event.preventDefault(); handleFormSubmit();" class="max-w-4xl mx-auto relative w-full">
                 
-                <div id="macro-popup" class="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 shadow-lg rounded-xl p-2 flex gap-2 overflow-x-auto hidden w-full z-50">
-                    </div>
+<div id="macro-popup" class="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 shadow-lg rounded-xl p-2 flex flex-wrap gap-2 hidden w-full z-50">
+</div>
 
                 <div class="flex gap-2 items-end">
                     <button type="button" onclick="toggleMacroPopup()" class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 flex items-center justify-center transition">
@@ -519,7 +653,7 @@ html.dark .keyword-tag.active {
             <label class="block text-sm font-bold text-gray-700 mb-1">서술/대화 비중</label>
             <select id="core-novel-ratio" class="w-full p-2 border rounded-lg bg-white">
                 <option value="밸런스형">밸런스형 (대화 50 : 지문 50)</option>
-                <option value="대화 중심 (여자 발언 위주)">대화 중심 (여자 발언 위주)</option>
+                <option value="여자 발언 위주">여자 발언 위주</option>
                 <option value="대화 중심">대화 중심 (티키타카 위주)</option>
                 <option value="지문/묘사 중심">지문/묘사 중심 (상황 설명 위주)</option>
             </select>
@@ -637,6 +771,63 @@ html.dark .keyword-tag.active {
     </div> 
 
     <script>
+
+// ▼▼▼ [수정됨] 2단계: 안전한 래퍼 방식 리사이즈 함수 ▼▼▼
+
+function makeResizable(textarea) {
+    if (!textarea || textarea.parentElement.classList.contains('resizable-wrapper')) return;
+
+    // 1. 보호용 래퍼(Wrapper) 생성
+    const wrapper = document.createElement('div');
+    wrapper.className = 'resizable-wrapper';
+    
+    // 2. 래퍼를 기존 textarea 위치에 삽입
+    textarea.parentNode.insertBefore(wrapper, textarea);
+    
+    // 3. textarea를 래퍼 안으로 이동
+    wrapper.appendChild(textarea);
+
+    // 4. 핸들(Grip) 생성 및 래퍼 안에 추가
+    const grip = document.createElement('div');
+    grip.className = 'resize-grip';
+    grip.innerHTML = '<i></i>'; // 시각적 바
+    wrapper.appendChild(grip);
+
+    // 5. 드래그 로직 (모바일/PC 공용)
+    let startY, startHeight;
+
+    const onStart = (e) => {
+        // e.preventDefault(); // 입력창 포커스 해제 방지를 위해 제거
+        startY = e.touches ? e.touches[0].clientY : e.clientY;
+        startHeight = parseInt(window.getComputedStyle(textarea).height, 10);
+        
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onEnd);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', onEnd);
+    };
+
+    const onMove = (e) => {
+        if(e.touches) e.preventDefault(); // 스크롤 방지
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const delta = clientY - startY;
+        
+        // 최소 40px ~ 최대 50vh 제한
+        const newH = Math.min(Math.max(40, startHeight + delta), window.innerHeight * 0.5);
+        textarea.style.height = `${newH}px`;
+        textarea.style.maxHeight = 'none'; // 기존 max-height 무시
+    };
+
+    const onEnd = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onEnd);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', onEnd);
+    };
+
+    grip.addEventListener('mousedown', onStart);
+    grip.addEventListener('touchstart', onStart, { passive: false });
+}
 
 /* --- 메시지 도구 기능 (수정/삭제/책갈피) --- */
 
@@ -916,6 +1107,10 @@ function loadBookmark(index) {
             novelRatio: '밸런스형'
         };
 
+// ▼▼▼ [신규] 1단계: 탭 상태 변수 추가 ▼▼▼
+        let currentRightTab = 'tools'; 
+        // ▲▲▲ [신규] 끝 ▲▲▲
+
 const AUTO_EVENT_DEFINITIONS = [
             { title: "위기 조성 (The Risk)", content: "현재 장소와 상황을 분석하여, 제3자에게 발각되거나 소리가 새어 나갈 '위기 상황'을 조성하시오. 물리적 개입(발소리, 인기척, 노크, 전화벨 등)을 통해 긴장감을 극대화하고 캐릭터를 당황하게 만드시오." },
             { title: "신체 배신 (Loss of Control)", content: "캐릭터의 의지와 무관한 신체적 반응을 집중적으로 묘사하시오. 참으려 해도 터져 나오는 교성, 다리의 경련, 혹은 생리적 현상 등 몸이 이성을 배신하고 멋대로 반응하는 상황을 강제로 연출하시오." },
@@ -949,7 +1144,8 @@ let lastTokenUsage = null; // 실제 토큰 사용량 저장용
         let selectedWorldId = null;
         let isDetailGenCancelled = false;
 
-        function init() {
+function init() {
+            // 1. 다크모드 초기화
             const savedDark = localStorage.getItem('novel_ai_dark_mode');
             const toggle = document.getElementById('dark-mode-toggle');
             if (savedDark === 'true') {
@@ -960,40 +1156,50 @@ let lastTokenUsage = null; // 실제 토큰 사용량 저장용
                 if(toggle) toggle.checked = false;
             }
 
-// [추가] Marked 라이브러리 줄바꿈 옵션 적용 (엔터 한 번으로 줄바꿈)
-        marked.setOptions({
-            breaks: true,
-            gfm: true
-        });
+            // 2. 마크다운 설정
+            marked.setOptions({
+                breaks: true,
+                gfm: true
+            });
 
+            // 3. 데이터 로드 및 초기 화면 설정
             loadData(); loadSettings();
             switchNav('chats');
+            
+            // 4. 엔터키 전송 이벤트
             document.getElementById('msg-input').addEventListener("keydown", (e) => {
                 if(window.innerWidth < 768) return; 
                 if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
             });
+
             renderRightSidebar();
             applyFontSize(SETTINGS.fontSize);
-            document.getElementById('model-display').innerText = 'Model: ' + (SETTINGS.currentModel || 'gemini-3-pro');
-            switchCoreTab('api'); // Initial load of core modal content
+            
+            const modelDisplay = document.getElementById('model-display');
+            if(modelDisplay) modelDisplay.innerText = 'Model: ' + (SETTINGS.currentModel || 'gemini-3-pro');
+            
+            switchCoreTab('api'); 
 
-// [추가] 퀵 스타트를 위해 입력창 초기 활성화
+            // 5. 퀵 스타트 (세션 없을 때 입력창 보이기)
             if (!currentSessionId) {
                 const inputArea = document.getElementById('input-area');
                 const msgInput = document.getElementById('msg-input');
-                inputArea.classList.remove('hidden');
-                inputArea.classList.add('flex');
-                msgInput.placeholder = "입력하기";
+                if(inputArea) {
+                    inputArea.classList.remove('hidden');
+                    inputArea.classList.add('flex');
+                }
+                if(msgInput) msgInput.placeholder = "입력하기";
             }
 
-// 슬라이더 움직일 때 숫자 실시간 변경
-    const slider = document.getElementById('core-max-token-slider');
-    if(slider) {
-        slider.addEventListener('input', function(e) {
-            document.getElementById('core-max-token-val').innerText = e.target.value;
-        });
-    }
+            // 6. 토큰 슬라이더 이벤트 연결
+            const slider = document.getElementById('core-max-token-slider');
+            if(slider) {
+                slider.addEventListener('input', function(e) {
+                    document.getElementById('core-max-token-val').innerText = e.target.value;
+                });
+            }
         }
+
 
 // [신규] 폼 제출 통합 핸들러 (엔터키 or 버튼 클릭 시 호출)
 function handleFormSubmit() {
@@ -1064,9 +1270,9 @@ function handleFormSubmit() {
         function saveData() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); } catch(e){} }
 
 function loadSettings() { 
-            try { 
-                const s = localStorage.getItem(SETTINGS_KEY); 
-                if(s) Object.assign(SETTINGS, JSON.parse(s)); 
+    try { 
+        const s = localStorage.getItem(SETTINGS_KEY); 
+        if(s) Object.assign(SETTINGS, JSON.parse(s));
                 if(!SETTINGS.globalLorebook) SETTINGS.globalLorebook=[]; 
                 if(SETTINGS.typingSpeed===undefined) SETTINGS.typingSpeed=15; 
                 if(SETTINGS.uncensored===undefined) SETTINGS.uncensored=true;
@@ -1075,6 +1281,13 @@ function loadSettings() {
                 if(!SETTINGS.novelStyle) SETTINGS.novelStyle = '웹소설체';
                 if(!SETTINGS.novelRatio) SETTINGS.novelRatio = '밸런스형';
                 if(!SETTINGS.maxOutputTokens) SETTINGS.maxOutputTokens = 4000;
+
+if(!SETTINGS.novelPacing) SETTINGS.novelPacing = '보통 (밸런스)'; // 변경된 텍스트로 기본값 설정
+        if(!SETTINGS.nsfwLevel) SETTINGS.nsfwLevel = '노멀 (성관계 해금)';
+        if(!SETTINGS.outputLength) SETTINGS.outputLength = '보통 (30문장 내외)';
+                if(!SETTINGS.charAttitude) SETTINGS.charAttitude = '보통 (Neutral)';
+                if(SETTINGS.enableMultiChoice === undefined) SETTINGS.enableMultiChoice = false; 
+                // ▲▲▲ [신규] 끝 ▲▲▲
 
                 // [추가] 매크로 초기값 설정
                 if(!SETTINGS.macros) {
@@ -1164,21 +1377,62 @@ function saveSettings() {
             document.getElementById('dim-overlay').classList.add('hidden');
         }
 
+// ▼▼▼ [수정됨] 오른쪽 사이드바 3단 분리 리팩토링 시작 ▼▼▼
+
+function switchRightTab(tab) {
+    currentRightTab = tab;
+    renderRightSidebar();
+}
+
+// [메인] 3단 탭 구조가 적용된 렌더링 함수
 function renderRightSidebar() {
     const p = document.getElementById('right-sidebar-content');
+    p.innerHTML = ''; 
+
+    // 1. 탭 버튼 영역 (3개로 분할)
+    const tabContainer = document.createElement('div');
+    tabContainer.className = "flex border-b border-gray-200 mb-4 bg-gray-50 dark:bg-slate-900";
+    tabContainer.innerHTML = `
+        <button onclick="switchRightTab('tools')" class="right-tab-btn ${currentRightTab === 'tools' ? 'active' : ''}">
+            <i class="fa-solid fa-toolbox mr-1"></i> 도구
+        </button>
+        <button onclick="switchRightTab('settings')" class="right-tab-btn ${currentRightTab === 'settings' ? 'active' : ''}">
+            <i class="fa-solid fa-sliders mr-1"></i> 설정
+        </button>
+        <button onclick="switchRightTab('core')" class="right-tab-btn ${currentRightTab === 'core' ? 'active' : ''}">
+            <i class="fa-solid fa-robot mr-1"></i> 지침
+        </button>
+    `;
+    p.appendChild(tabContainer);
+
+    // 2. 내용 컨테이너
+    const contentContainer = document.createElement('div');
+    contentContainer.id = 'right-tab-content';
+    p.appendChild(contentContainer);
+
+    // 3. 탭별 렌더링 호출
+    if (currentRightTab === 'tools') {
+        renderRightTools(contentContainer);
+    } else if (currentRightTab === 'settings') {
+        renderRightSettings(contentContainer);
+    } else {
+        renderRightCoreRules(contentContainer);
+    }
+}
+
+function renderRightTools(container) {
     const chat = DB.chats.find(c => c.id === currentSessionId);
     let worldInfo = '대화 선택 안됨';
     
     if (chat) {
-        if (chat.isNovelMode) {
-            worldInfo = `소설 모드: ${chat.title}`;
-        } else {
+        if (chat.isNovelMode) worldInfo = `소설 모드: ${chat.title}`;
+        else {
             const w = DB.worlds.find(x => x.id === chat.worldId);
             if(w) worldInfo = w.name;
         }
     }
 
-    // 책갈피 리스트 생성 (기존 로직 유지)
+    // 책갈피 리스트 (기존 로직 유지)
     let bookmarkListHtml = '<div class="text-gray-400 text-xs p-2 text-center">저장된 책갈피가 없습니다.</div>';
     if (chat && chat.history) {
         const bookmarks = chat.history
@@ -1187,24 +1441,21 @@ function renderRightSidebar() {
 
         if (bookmarks.length > 0) {
             bookmarkListHtml = bookmarks.map(item => {
-                const isUser = item.msg.role === 'user';
-                const roleIcon = isUser ? '<i class="fa-solid fa-user"></i>' : (item.msg.role === 'director' ? '<i class="fa-solid fa-clapperboard"></i>' : '<i class="fa-solid fa-robot"></i>');
                 const summary = item.msg.text.substring(0, 30) + (item.msg.text.length > 30 ? '...' : '');
-                const nameDisplay = item.msg.bookmarkName ? `<div class="font-bold text-sm text-indigo-700 mb-1 border-b border-yellow-200 pb-1">${item.msg.bookmarkName}</div>` : '';
+                const nameDisplay = item.msg.bookmarkName ? `<div class="font-bold text-sm text-indigo-700 dark:text-indigo-400 mb-1 border-b border-yellow-200 dark:border-gray-600 pb-1">${item.msg.bookmarkName}</div>` : '';
                 
                 return `
-                <div class="border rounded-lg p-2 bg-yellow-50 border-yellow-100 hover:shadow-md transition group relative">
+                <div class="border rounded-lg p-2 bg-yellow-50 dark:bg-slate-800 border-yellow-100 dark:border-slate-700 hover:shadow-md transition group relative">
                     <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] font-bold text-yellow-700 dark:text-yellow-500 bg-yellow-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">Turn ${item.index + 1}</span>
                         <div class="flex items-center gap-1">
-                            <span class="text-[10px] font-bold text-yellow-700 bg-yellow-100 px-1.5 py-0.5 rounded">Turn ${item.index + 1}</span>
-                            <button onclick="editBookmarkName(${item.index})" class="text-gray-400 hover:text-indigo-600 px-1" title="이름 변경"><i class="fa-solid fa-pen text-[10px]"></i></button>
-                            <button onclick="deleteBookmarkFromSidebar(${item.index})" class="text-gray-400 hover:text-red-500 px-1" title="해제"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                             <button onclick="editBookmarkName(${item.index})" class="text-gray-400 hover:text-indigo-600 px-1"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                             <button onclick="deleteBookmarkFromSidebar(${item.index})" class="text-gray-400 hover:text-red-500 px-1"><i class="fa-solid fa-trash text-[10px]"></i></button>
                         </div>
-                        <div class="text-gray-400 text-xs">${roleIcon}</div>
                     </div>
                     ${nameDisplay}
-                    <div class="text-xs text-gray-700 font-medium mb-2 break-all leading-tight min-h-[1.5em] opacity-80">${summary}</div>
-                    <button onclick="loadBookmark(${item.index})" class="w-full py-1.5 bg-white border border-yellow-200 text-yellow-700 font-bold text-xs rounded hover:bg-yellow-600 hover:text-white transition flex items-center justify-center gap-1">
+                    <div class="text-xs text-gray-700 dark:text-gray-300 font-medium mb-2 break-all leading-tight opacity-80">${summary}</div>
+                    <button onclick="loadBookmark(${item.index})" class="w-full py-1.5 bg-white dark:bg-slate-700 border border-yellow-200 dark:border-slate-600 text-yellow-700 dark:text-yellow-500 font-bold text-xs rounded hover:bg-yellow-600 hover:text-white transition flex items-center justify-center gap-1">
                         <i class="fa-solid fa-rotate-left"></i> 이 시점 분기
                     </button>
                 </div>`;
@@ -1212,94 +1463,261 @@ function renderRightSidebar() {
         }
     }
 
-    p.innerHTML = `
-    <div class="mb-4 bg-white border rounded-lg p-3 shadow-sm">
+    container.innerHTML = `
+    <div class="mb-4 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg p-3 shadow-sm">
         <div class="text-xs font-bold text-gray-400 mb-1">CURRENT CONTEXT</div>
-        <div class="font-bold text-gray-800 text-sm flex items-center gap-2">
+        <div class="font-bold text-gray-800 dark:text-gray-200 text-sm flex items-center gap-2">
             <i class="fa-solid fa-globe text-indigo-500"></i> ${worldInfo}
         </div>
         <div class="mt-2 text-xs text-gray-500">
-            ${chat ? `<span class="bg-gray-100 px-2 py-1 rounded">턴 수: ${chat.history.length}</span>` : ''}
+            ${chat ? `<span class="bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">턴 수: ${chat.history.length}</span>` : ''}
         </div>
     </div>
 
     <div class="mb-4">
-        <div class="text-xs font-bold text-gray-400 mb-2 px-1">TOOLS</div>
+        <div class="text-xs font-bold text-gray-400 mb-2 px-1">ACTIONS</div>
         <div class="grid grid-cols-3 gap-2">
-            <button onclick="openMemoryModal()" class="flex flex-col items-center justify-center p-2 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-lg hover:bg-indigo-100 transition shadow-sm" title="기억/메모">
-                <i class="fa-solid fa-brain text-lg mb-1"></i>
-                <span class="text-[10px] font-bold">장기 기억</span>
-            </button>
-            
-            <button onclick="openSessionSettings('edit')" class="flex flex-col items-center justify-center p-2 bg-slate-50 text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-100 transition shadow-sm" title="설정 재입력">
-                <i class="fa-solid fa-users-gear text-lg mb-1"></i>
-                <span class="text-[10px] font-bold">설정 변경</span>
-            </button>
-
-            <button onclick="exportChat()" class="flex flex-col items-center justify-center p-2 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-lg hover:bg-emerald-100 transition shadow-sm" title="저장/내보내기">
-                <i class="fa-solid fa-download text-lg mb-1"></i>
-                <span class="text-[10px] font-bold">현재 대화 저장</span>
-            </button>
-            
-            <button onclick="clearChat()" class="flex flex-col items-center justify-center p-2 bg-red-50 text-red-500 border border-red-100 rounded-lg hover:bg-red-100 transition shadow-sm" title="대화 정리">
-                <i class="fa-solid fa-eraser text-lg mb-1"></i>
-                <span class="text-[10px] font-bold">출력창 정리</span>
-            </button>
-            
-            <button onclick="handleNovelUploadClick()" class="flex flex-col items-center justify-center p-2 bg-blue-50 text-blue-600 border border-blue-100 rounded-lg hover:bg-blue-100 transition shadow-sm" title="파일 불러오기">
-                <i class="fa-solid fa-folder-open text-lg mb-1"></i>
-                <span class="text-[10px] font-bold">파일 열기</span>
-            </button>
-
-            <button onclick="showLastPrompt()" class="flex flex-col items-center justify-center p-2 bg-amber-50 text-amber-600 border border-amber-100 rounded-lg hover:bg-amber-100 transition shadow-sm" title="전송 데이터 확인">
-                <i class="fa-solid fa-bug text-lg mb-1"></i>
-                <span class="text-[10px] font-bold">디버그</span>
-            </button>
+            <button onclick="openMemoryModal()" class="tool-btn bg-indigo-50 text-indigo-600 dark:bg-slate-800 dark:text-indigo-400 border border-indigo-100 dark:border-slate-600"><i class="fa-solid fa-brain mb-1"></i>기억</button>
+            <button onclick="openSessionSettings('edit')" class="tool-btn bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-600"><i class="fa-solid fa-users-gear mb-1"></i>설정</button>
+            <button onclick="exportChat()" class="tool-btn bg-emerald-50 text-emerald-600 dark:bg-slate-800 dark:text-emerald-400 border border-emerald-100 dark:border-slate-600"><i class="fa-solid fa-download mb-1"></i>저장</button>
+            <button onclick="clearChat()" class="tool-btn bg-red-50 text-red-500 dark:bg-slate-800 dark:text-red-400 border border-red-100 dark:border-slate-600"><i class="fa-solid fa-eraser mb-1"></i>정리</button>
+            <button onclick="handleNovelUploadClick()" class="tool-btn bg-blue-50 text-blue-600 dark:bg-slate-800 dark:text-blue-400 border border-blue-100 dark:border-slate-600"><i class="fa-solid fa-folder-open mb-1"></i>열기</button>
+            <button onclick="showLastPrompt()" class="tool-btn bg-amber-50 text-amber-600 dark:bg-slate-800 dark:text-amber-400 border border-amber-100 dark:border-slate-600"><i class="fa-solid fa-bug mb-1"></i>디버그</button>
         </div>
+        <style>.tool-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0.5rem; border-radius:0.5rem; font-size:0.65rem; font-weight:bold; transition:all 0.2s; } .tool-btn:hover { transform:translateY(-1px); box-shadow:0 2px 4px rgba(0,0,0,0.05); }</style>
     </div>
     
     <div class="mb-4">
         <div class="text-xs font-bold text-gray-400 mb-2 px-1 flex justify-between items-center">
             <span>BOOKMARKS</span>
-            <span class="text-[10px] bg-gray-100 px-1.5 rounded text-gray-500">저장 지점</span>
         </div>
-        <div id="bookmark-list-container" class="space-y-0">
-            ${bookmarkListHtml}
-        </div>
+        <div id="bookmark-list-container" class="space-y-0">${bookmarkListHtml}</div>
     </div>
 
     <div>
         <div class="flex justify-between items-center mb-2 px-1">
             <div class="text-xs font-bold text-gray-400">GLOBAL LOREBOOK</div>
-            <button onclick="addGlobalLoreFromSidebar()" class="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded hover:bg-indigo-100 font-bold">+ 추가</button>
+            <button onclick="addGlobalLoreFromSidebar()" class="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded hover:bg-indigo-100 font-bold transition">+ 추가</button>
         </div>
         <div id="lore-list-container" class="space-y-2"></div>
-    </div>
-    `;
+    </div>`;
 
-    // 로어북 렌더링 (기존 로직)
-    const loreContainer = document.getElementById('lore-list-container');
-    (SETTINGS.globalLorebook || []).forEach((lore, idx) => {
-        const div = document.createElement('div');
-        div.className = "border rounded bg-white text-sm relative group hover:shadow-sm transition";
-        div.innerHTML = `
-            <div class="p-3 cursor-pointer flex justify-between items-center" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                <div class="font-bold text-indigo-700 truncate">${lore.title}</div>
-                <div class="flex gap-1">
-                    <button onclick="event.stopPropagation(); editGlobalLore(${idx})" class="text-gray-400 hover:text-indigo-600 p-1"><i class="fa-solid fa-pen"></i></button>
-                    <button onclick="event.stopPropagation(); deleteGlobalLore(${idx})" class="text-gray-400 hover:text-red-500 p-1"><i class="fa-solid fa-trash"></i></button>
+    // ▼▼▼ 로어북 렌더링 (디자인 변경됨) ▼▼▼
+    const loreContainer = container.querySelector('#lore-list-container');
+    
+    if (!SETTINGS.globalLorebook || SETTINGS.globalLorebook.length === 0) {
+        loreContainer.innerHTML = `<div class="text-center text-xs text-gray-400 py-4 cursor-pointer hover:text-indigo-500" onclick="addGlobalLoreFromSidebar()">등록된 로어가 없습니다.<br>'+ 추가' 버튼을 눌러보세요.</div>`;
+    } else {
+        SETTINGS.globalLorebook.forEach((lore, idx) => {
+            const div = document.createElement('div');
+            // '지침'과 동일한 카드 디자인 적용
+            div.className = "flex items-center justify-between p-2 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded mb-1.5 shadow-sm group hover:border-indigo-300 transition-colors";
+            div.innerHTML = `
+                <div class="flex flex-col overflow-hidden flex-1 cursor-pointer py-1" onclick="editGlobalLore(${idx})" title="클릭하여 수정">
+                    <div class="font-bold text-xs text-indigo-700 dark:text-indigo-400 truncate">${lore.title}</div>
+                    <div class="text-[10px] text-gray-500 dark:text-gray-400 truncate flex items-center gap-1">
+                        ${lore.keywords ? '<i class="fa-solid fa-key text-[9px]"></i> ' + lore.keywords : '<i class="fa-solid fa-infinity text-[9px]"></i> 상시 적용'}
+                    </div>
                 </div>
-            </div>
-            <div class="px-3 pb-3 hidden text-xs text-gray-600 border-t pt-2">
-                <div class="font-medium text-gray-400 mb-1">키워드: ${lore.keywords}</div>
-                <div class="whitespace-pre-wrap leading-relaxed">${lore.content}</div>
-            </div>
-        `;
-        loreContainer.appendChild(div);
-    });
+                <div class="flex-shrink-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="editGlobalLore(${idx})" class="text-gray-400 hover:text-indigo-600 px-1" title="수정"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                    <button onclick="deleteGlobalLore(${idx})" class="text-gray-400 hover:text-red-500 px-1" title="삭제"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                </div>
+            `;
+            loreContainer.appendChild(div);
+        });
+    }
 }
 
+function renderRightSettings(container) {
+    const renderSelect = (label, key, options) => {
+        const currentVal = SETTINGS[key];
+        const optionsHtml = options.map(opt => `<option value="${opt}" ${currentVal === opt ? 'selected' : ''}>${opt}</option>`).join('');
+        return `
+            <div class="mb-3">
+                <label class="setting-group-label">${label}</label>
+                <select class="sidebar-select" onchange="updateSidebarSetting('${key}', this.value)">${optionsHtml}</select>
+            </div>`;
+    };
 
+    const autoEventHtml = `
+        <div class="mb-3">
+            <div class="flex justify-between items-center mb-1">
+                <label class="setting-group-label text-red-600 dark:text-red-400"><i class="fa-solid fa-bolt mr-1"></i>돌발 이벤트</label>
+                <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500 cursor-pointer" ${SETTINGS.autoEventEnabled ? 'checked' : ''} onchange="updateSidebarSetting('autoEventEnabled', this.checked)">
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="range" min="0" max="50" step="5" value="${SETTINGS.autoEventChance || 10}" class="flex-1 accent-red-600 cursor-pointer h-1.5 bg-gray-200 rounded-lg appearance-none dark:bg-gray-700" oninput="document.getElementById('sidebar-event-display').innerText = this.value + '%'; updateSidebarSetting('autoEventChance', parseInt(this.value))">
+                <span class="text-xs font-bold text-red-600 dark:text-red-400 w-8 text-right" id="sidebar-event-display">${SETTINGS.autoEventChance || 10}%</span>
+            </div>
+        </div>`;
+
+    container.innerHTML = `
+    <div class="space-y-1 p-1">
+        <div class="bg-gray-50 dark:bg-slate-900 p-3 rounded-lg border dark:border-slate-700 mb-4">
+            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-3 flex items-center"><i class="fa-solid fa-sliders mr-2 text-indigo-500"></i>소설 상세 설정</div>
+            
+            ${renderSelect('서술 시점', 'novelViewpoint', ['3인칭 제한적 시점 (추천)', '3인칭 제한적 (히로인 내면)', '1인칭 주인공 시점', '3인칭 관찰자 시점', '3인칭 전지적 작가 시점'])}
+            ${renderSelect('서술/대화 비중', 'novelRatio', ['밸런스형', '대화 중심 (여자 발언 위주)', '대화 중심', '지문/묘사 중심'])}
+
+            <hr class="border-gray-200 dark:border-slate-700 my-3">
+
+            ${renderSelect('서술 호흡', 'novelPacing', ['빠른 전개 (사건 위주)', '보통 (밸런스)', '느린 전개 (세밀한 묘사)'])}
+            ${renderSelect('문체 스타일', 'novelStyle', ['웹소설체', '간결/건조체', '만연/화려체'])}
+            
+            ${renderSelect('수위 강도', 'nsfwLevel', ['전연령 (스킨십/키스)', '노멀 (성관계 해금)', '고수위 (자극적/적나라함)', '초고수위 (에로게/동인지)'])}
+            ${renderSelect('캐릭터 태도', 'charAttitude', ['철벽 (차가움/방어적)', '도도함 (오만/내려다봄)', '보통 (일반적)', '적극적 (유혹/리드)', '금사빠 (맹목적 애정)'])}
+            ${renderSelect('1회 출력 분량', 'outputLength', ['짧게 (10문장 내외)', '보통 (30문장 내외)', '길게 (50문장 내외)'])}
+            
+            <hr class="border-gray-200 dark:border-slate-700 my-3">
+            
+            ${autoEventHtml}
+
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-slate-700">
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300">4지선다 선택지 생성</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" ${SETTINGS.enableMultiChoice ? 'checked' : ''} onchange="updateSidebarSetting('enableMultiChoice', this.checked)">
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer 
+                                dark:bg-slate-500 dark:border-slate-400 border border-gray-300 
+                                peer-checked:after:translate-x-full peer-checked:after:border-white 
+                                after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
+                                after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all 
+                                peer-checked:bg-indigo-600"></div>
+                </label>
+            </div>
+        </div>
+        
+        <div class="text-xs text-gray-500 text-center mt-4">
+            * AI 핵심 지침은 상단 '지침' 탭에서 설정하세요.
+        </div>
+    </div>`;
+}
+
+/* ▼▼▼ [수정] 3. 사이드바 렌더링 (클릭 영역 개선) ▼▼▼ */
+function renderRightCoreRules(container) {
+    let coreRulesHtml = '';
+    
+    if (!SETTINGS.coreRules || SETTINGS.coreRules.length === 0) {
+        coreRulesHtml = `<div class="text-center text-xs text-gray-400 py-4 cursor-pointer hover:text-indigo-500" onclick="addCoreRuleFromSidebar()">등록된 지침이 없습니다.<br>'+ 추가' 버튼을 눌러보세요.</div>`;
+    } else {
+        SETTINGS.coreRules.forEach((rule, idx) => {
+            // 클릭 시 editCoreRuleFromSidebar(idx) 호출
+            coreRulesHtml += `
+            <div class="flex items-center justify-between p-2 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded mb-1.5 shadow-sm group hover:border-indigo-300 transition-colors">
+                <div class="flex items-center gap-2 overflow-hidden flex-1">
+                    <input type="checkbox" ${rule.enabled !== false ? 'checked' : ''} onchange="toggleCoreRule(${idx}, this.checked)" onclick="event.stopPropagation()" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer flex-shrink-0" title="이 지침 켜기/끄기">
+                    
+                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate cursor-pointer hover:text-indigo-600 flex-1 py-1" onclick="editCoreRuleFromSidebar(${idx})" title="${rule.content ? rule.content.substring(0,50)+'...' : '내용 없음'}">
+                        ${rule.title || '규칙 ' + (idx + 1)}
+                    </span>
+                </div>
+                <div class="flex-shrink-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="editCoreRuleFromSidebar(${idx})" class="text-gray-400 hover:text-indigo-600 px-1" title="수정"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                    <button onclick="deleteCoreRuleFromSidebar(${idx})" class="text-gray-400 hover:text-red-500 px-1" title="삭제"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                </div>
+            </div>`;
+        });
+    }
+
+    container.innerHTML = `
+    <div class="space-y-1 p-1">
+        <div class="bg-gray-50 dark:bg-slate-900 p-3 rounded-lg border dark:border-slate-700">
+             <div class="flex justify-between items-center mb-3">
+                <div class="font-bold text-sm text-gray-800 dark:text-gray-200"><i class="fa-solid fa-robot mr-2 text-indigo-500"></i>AI 핵심 지침</div>
+                <button onclick="addCoreRuleFromSidebar()" class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded hover:bg-indigo-200 font-bold transition">+ 추가</button>
+            </div>
+            <div class="space-y-0 max-h-[70vh] overflow-y-auto pr-1">
+                ${coreRulesHtml}
+            </div>
+            <div class="mt-3 text-[10px] text-gray-400 leading-tight">
+                * 체크박스를 끄면 해당 지침은 AI에게 전달되지 않습니다.
+            </div>
+        </div>
+    </div>`;
+}
+
+function updateSidebarSetting(key, value) {
+    SETTINGS[key] = value;
+    saveSettings();
+}
+
+function toggleCoreRule(idx, enabled) {
+    if(SETTINGS.coreRules[idx]) {
+        SETTINGS.coreRules[idx].enabled = enabled;
+        saveSettings();
+    }
+}
+
+function editCoreRuleFromSidebar(idx) {
+    const rule = SETTINGS.coreRules[idx];
+    const body = document.getElementById('modal-body');
+
+    // 1. 에디터 모달 내용 주입 (넓은 입력창 제공)
+    body.innerHTML = `
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">지침 제목</label>
+                <input id="quick-edit-title" type="text" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500" value="${String(rule.title).replace(/"/g, '&quot;')}" placeholder="예: 전투 묘사 강화">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">지침 내용 (프롬프트)</label>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">AI가 이 규칙을 어떻게 따라야 하는지 구체적으로 적어주세요.</div>
+                <textarea id="quick-edit-content" rows="15" class="w-full p-3 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 resize-none text-sm leading-relaxed focus:ring-2 focus:ring-indigo-500" placeholder="내용을 입력하세요...">${rule.content}</textarea>
+            </div>
+        </div>
+    `;
+
+    // 2. 모달 UI 설정
+    document.getElementById('modal-title').innerText = "AI 핵심 지침 수정";
+    document.getElementById('modal-delete-btn').classList.add('hidden');
+    document.getElementById('btn-gen-details').classList.add('hidden'); // 불필요한 버튼 숨김
+
+    // 3. 저장 버튼 기능 재정의
+    const saveBtn = document.getElementById('modal-save-btn');
+    saveBtn.onclick = () => {
+        const titleVal = document.getElementById('quick-edit-title').value.trim();
+        // 제목이 비어있으면 저장 안 함 (선택사항)
+        if (!titleVal) return alert("제목을 입력해주세요.");
+
+        SETTINGS.coreRules[idx].title = titleVal;
+        SETTINGS.coreRules[idx].content = document.getElementById('quick-edit-content').value;
+        
+        saveSettings();       // 저장
+        renderRightSidebar(); // 사이드바 갱신
+        closeModal('editor-modal');
+    };
+
+    // 4. 모달 열기 및 리사이즈 핸들 부착
+    openModalInternal('editor-modal');
+    setTimeout(() => {
+        const textarea = document.getElementById('quick-edit-content');
+        if(textarea) {
+            textarea.focus(); // 바로 입력 가능하게 포커스
+            makeResizable(textarea);
+        }
+    }, 50);
+}
+
+/* ▼▼▼ [수정] 2. '추가' 버튼 누르면 바로 빈 에디터 열기 ▼▼▼ */
+function addCoreRuleFromSidebar() {
+    // 빈 규칙 생성 후 푸시
+    SETTINGS.coreRules.push({ title: '새 규칙', content: '', enabled: true });
+    saveSettings();
+    renderRightSidebar();
+    
+    // 방금 추가한 규칙(마지막 인덱스)을 즉시 에디터로 열기
+    editCoreRuleFromSidebar(SETTINGS.coreRules.length - 1);
+}
+
+function deleteCoreRuleFromSidebar(idx) {
+    if(confirm("이 지침을 삭제하시겠습니까?")) {
+        SETTINGS.coreRules.splice(idx, 1);
+        saveSettings();
+        renderRightSidebar();
+    }
+}
+
+// ▲▲▲ [수정됨] 오른쪽 사이드바 3단 분리 리팩토링 끝 ▲▲▲
 
 function handleNovelUploadClick() {
             const input = document.createElement('input');
@@ -1685,6 +2103,14 @@ function openEditor(id, type, prefillData = null, worldId = null) {
     if(genDetailsBtn) genDetailsBtn.classList.toggle('hidden', !data?.name); 
 
     openModalInternal('editor-modal');
+
+
+    // 모달이 열린 직후, 내부의 모든 textarea에 드래그 핸들을 부착합니다.
+    setTimeout(() => {
+        const textareas = document.querySelectorAll('#modal-body textarea');
+        textareas.forEach(el => makeResizable(el));
+    }, 50);
+
 
     // 저장 로직
     document.getElementById('modal-save-btn').onclick = () => {
@@ -2451,12 +2877,11 @@ if(s.history) s.history.forEach((msg, i) => appendMessage(msg, false, i));
             setTimeout(scrollToBottom, 50);
         }
 
-// 기존 appendMessage 함수를 이 코드로 교체하세요
+// ▼▼▼ [수정됨] 메시지 출력 시 '수정창'에만 리사이즈 핸들 부착 ▼▼▼
 function appendMessage(msg, animate = false, index = null) {
     const p = document.getElementById('content-area');
     if (p.querySelector('#empty-state')) p.innerHTML = '';
 
-    // 인덱스가 없으면(방금 보낸 메시지인 경우) 현재 히스토리의 마지막 번호 할당
     if (index === null && currentSessionId) {
         const chat = DB.chats.find(c => c.id === currentSessionId);
         index = chat ? chat.history.length - 1 : 0;
@@ -2464,45 +2889,39 @@ function appendMessage(msg, animate = false, index = null) {
 
     const isUser = msg.role === 'user';
     const isDirector = msg.role === 'director';
-    const isBookmarked = msg.bookmarked || false; // 책갈피 상태 확인
+    const isBookmarked = msg.bookmarked || false;
 
     const div = document.createElement('div');
-    // group 클래스 추가 (호버 감지용)
     div.className = `msg-wrapper group ${isUser ? 'user' : (isDirector ? 'director' : 'model')} relative`;
-    div.dataset.index = index; // 인덱스 저장
+    div.dataset.index = index;
 
-    // 책갈피 표시 아이콘 (활성화된 경우 메시지 상단에 표시)
     const bookmarkIndicator = isBookmarked 
         ? `<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 text-yellow-500 text-xs z-10"><i class="fa-solid fa-bookmark"></i></div>` 
         : '';
 
-// [수정됨] 도구 버튼: 크기 확대(w-8, text-sm) 및 복사 버튼 추가
     const toolsHtml = `
         <div class="msg-tools absolute right-0 -bottom-8 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 z-10">
             <button onclick="toggleBookmark(${index})" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-yellow-100 text-gray-400 ${isBookmarked ? 'text-yellow-500' : 'hover:text-yellow-600'}" title="책갈피">
                 <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark text-sm"></i>
             </button>
-            
             <button onclick="copyMessage(${index})" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-green-100 text-gray-400 hover:text-green-600" title="내용 복사">
                 <i class="fa-regular fa-copy text-sm"></i>
             </button>
-
             <button onclick="enableEditMessage(${index})" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-indigo-100 text-gray-400 hover:text-indigo-600" title="수정">
                 <i class="fa-solid fa-pen text-sm"></i>
             </button>
-
             <button onclick="deleteMessage(${index})" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 text-gray-400 hover:text-red-500" title="삭제">
                 <i class="fa-solid fa-trash text-sm"></i>
             </button>
         </div>
     `;
 
-    // 메시지 내용 생성
     div.innerHTML = `
         ${bookmarkIndicator}
         <div class="msg-container relative">
             ${toolsHtml}
             <div class="novel-text model-content" id="msg-content-${index}">${animate ? '' : marked.parse(msg.text)}</div>
+            
             <div id="msg-editor-${index}" class="hidden mt-2">
                 <textarea class="w-full p-3 text-sm border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white shadow-inner resize-none mb-2" rows="5"></textarea>
                 <div class="flex justify-end gap-2">
@@ -2514,6 +2933,13 @@ function appendMessage(msg, animate = false, index = null) {
 
     p.appendChild(div);
 
+    // ▼▼▼ [핵심] 여기서 수정용 textarea를 찾아서 리사이즈 핸들을 달아줍니다 ▼▼▼
+    const editTextarea = div.querySelector(`#msg-editor-${index} textarea`);
+    if (editTextarea) {
+        makeResizable(editTextarea);
+    }
+    // ▲▲▲ [끝] ▲▲▲
+
     if (!isUser && !isDirector) {
         const target = div.querySelector('.model-content');
         currentMsgElement = target;
@@ -2523,7 +2949,6 @@ function appendMessage(msg, animate = false, index = null) {
         }
     }
 }
-
         
         function startTyping() {
             isTyping = true;
@@ -2585,185 +3010,237 @@ function cancelGeneration() {
         }
         
 
-/* --- [수정됨] 스마트 로어북 (allTriggers 오류 수정 버전) --- */
 window.callGemini = async function(chat, signalObj) {
     if (!SETTINGS.apiKey) throw new Error("API 키가 설정되지 않았습니다.");
 
-    // 1. 키워드 감지 (화면 표시 X, 내부 계산만 수행)
+    // 1. 키워드/로어북 감지
     const recentHistory = chat.history.slice(-3).map(h => h.text).join('\n');
+    
+    // 글로벌 로어북 감지
     const activeGlobal = detectActiveLore(SETTINGS.globalLorebook, recentHistory);
     
-    let activeWorld = { entries: [], triggers: [] };
+    // 배경(World) 데이터 가져오기
+    let activeWorldLore = { entries: [], triggers: [] };
+    let worldRulesStr = ""; // 배경 전용 AI 지침 문자열 초기화
+    
     const w = DB.worlds.find(x => x.id === chat.worldId);
     if (w) {
-        activeWorld = detectActiveLore(w.lorebook, recentHistory);
+        // A. 배경 로어북 감지 (키워드 매칭 or 상시 적용)
+        activeWorldLore = detectActiveLore(w.lorebook, recentHistory);
+        
+        // B. 배경 AI 연출 지침(aiRules) 가져오기 [추가된 부분]
+        if (w.aiRules && w.aiRules.length > 0) {
+            worldRulesStr = w.aiRules
+                .filter(r => r.enabled !== false) // 체크 해제된 것 제외
+                .map(r => `[World Rule: ${r.title}] ${r.content}`)
+                .join('\n');
+        }
     }
     
-    // [중요] 누락되었던 변수 정의 복구 (디버그 로그용)
-    const allTriggers = [...activeGlobal.triggers, ...activeWorld.triggers];
+    const allTriggers = [...activeGlobal.triggers, ...activeWorldLore.triggers];
 
-    // --- 이하 프롬프트 조립 (기존과 동일) ---
+    // 2. 신규 설정값 프롬프트 변환 (기존 유지)
     
-    const novelSettings = `[소설 상세 서술 지침]
-1. 시점: ${SETTINGS.novelViewpoint || '3인칭 제한적 시점'}
-2. 문체 스타일: ${SETTINGS.novelStyle || '웹소설체'}
-3. 서술 비중: ${SETTINGS.novelRatio || '밸런스형'}`;
-
-    const enabledCoreRules = SETTINGS.coreRules.filter(r => r.enabled !== false).map(r => r.content).join('\n');
-    const dicRules = SETTINGS.dicRules.map(r => `[용어/표현 규칙: ${r.title}] ${r.content}`).join('\n');
+    // (1) 서술 호흡
+    const pacingMap = {
+        '빠른 전개 (사건 위주)': 'Pacing: FAST. Focus on event progression. Skip mundane details. Summarize time passage quickly.',
+        '보통 (밸런스)': 'Pacing: BALANCED. Maintain a natural rhythm between dialogue and narration.',
+        '느린 전개 (세밀한 묘사)': 'Pacing: SLOW. Focus deeply on sensory details, micro-expressions, and psychological shifts. Describe the scene vividly.',
+        '빠른 전개': 'Pacing: FAST. Focus on event progression.',
+        '보통': 'Pacing: BALANCED.',
+        '느린 전개': 'Pacing: SLOW. Focus on details.'
+    };
     
+    // (2) 수위 강도
+    const nsfwPromptText = {
+        mild: 'Safety: Mild/Romance. Kissing, hugging, and physical contact are allowed. Strictly NO sexual intercourse or explicit genitals.',
+        normal: 'Safety: R-18. Sexual intercourse is allowed. Standard erotic descriptions of intimacy.',
+        hard: 'Safety: Hardcore. Highly explicit, stimulating details of sexual acts, fluids, and sensations. Focus on physical pleasure.',
+        extreme: 'Safety: Extreme/Hentai. Style: Eroge/Doujinshi. Unrealistic, hyper-sexualized descriptions. Ahegao, corruption, mind-break, and deep fetishes are allowed. Focus on intense stimulation and instinct.'
+    };
 
-/* ▼▼▼ [5-1. 여기 붙여넣기] 주사위 굴리기 로직 ▼▼▼ */
+    const nsfwMap = {
+        '전연령 (스킨십/키스)': nsfwPromptText.mild,
+        '노멀 (성관계 해금)': nsfwPromptText.normal,
+        '고수위 (자극적/적나라함)': nsfwPromptText.hard,
+        '초고수위 (에로게/동인지)': nsfwPromptText.extreme,
+        '전연령': nsfwPromptText.mild,
+        '노멀': nsfwPromptText.normal,
+        '하드코어': nsfwPromptText.hard,
+        '익스트림': nsfwPromptText.extreme,
+        '하드코어 (적나라한 묘사)': nsfwPromptText.hard,
+        '익스트림 (극한/하드코어)': nsfwPromptText.extreme
+    };
+    
+    // (3) 캐릭터 태도
+    const attitudeMap = {
+        '철벽 (차가움/방어적)': 'Character Attitude: Cold, Defensive, Distant. Do not open up easily.',
+        '도도함 (오만/내려다봄)': 'Character Attitude: Arrogant, Haughty, High-pride. Looks down on others.',
+        '보통 (일반적)': 'Character Attitude: Neutral/Natural based on personality.',
+        '적극적 (유혹/리드)': 'Character Attitude: Active, Flirty, Aggressive in relationship.',
+        '금사빠 (맹목적 애정)': 'Character Attitude: Easily falls in love. Very affectionate and clingy.',
+        '철벽': 'Character Attitude: Cold.',
+        '도도함': 'Character Attitude: Arrogant.',
+        '보통': 'Character Attitude: Neutral.',
+        '적극적': 'Character Attitude: Active.',
+        '금사빠': 'Character Attitude: Affectionate.'
+    };
+
+    // (4) 출력 분량
+    const lengthMap = {
+        '짧게 (10문장 내외)': 'Length: SHORT. Keep the response concise (around 10 sentences).',
+        '보통 (30문장 내외)': 'Length: MEDIUM. Standard novel length (around 30 sentences).',
+        '길게 (50문장 내외)': 'Length: LONG. Write extensively (50+ sentences). Be very descriptive.',
+        '짧게': 'Length: SHORT.',
+        '보통': 'Length: MEDIUM.',
+        '길게': 'Length: LONG.'
+    };
+
+    const pacingPrompt = pacingMap[SETTINGS.novelPacing] || pacingMap['보통 (밸런스)'];
+    const nsfwPrompt = nsfwMap[SETTINGS.nsfwLevel] || nsfwMap['노멀 (성관계 해금)'];
+    const attitudePrompt = attitudeMap[SETTINGS.charAttitude] || attitudeMap['보통 (일반적)'];
+    const lengthPrompt = lengthMap[SETTINGS.outputLength] || lengthMap['보통 (30문장 내외)'];
+
+    let multiChoicePrompt = "";
+    if (SETTINGS.enableMultiChoice) {
+        multiChoicePrompt = `
+[SPECIAL INSTRUCTION: MULTI-CHOICE]
+At the very end of your response, you MUST generate 4 distinct options for the User's next action.
+Format:
+1. [Choice 1]
+2. [Choice 2]
+3. [Choice 3]
+4. [Choice 4]`;
+    }
+
+    // 3. 프롬프트 조립
+    const enabledCoreRules = SETTINGS.coreRules.filter(r => r.enabled !== false).map(r => `[Core Rule: ${r.title}] ${r.content}`).join('\n');
+    const dicRules = SETTINGS.dicRules.map(r => `[Dictionary] ${r.title}: ${r.content}`).join('\n');
+    
+    // Auto-Event
     let autoEventInstruction = "";
-    if (SETTINGS.autoEventEnabled && Math.random() * 100 < (SETTINGS.autoEventChance || 0)) {
+    if (SETTINGS.autoEventEnabled && Math.random() * 100 < (SETTINGS.autoEventChance || 10)) {
         const event = AUTO_EVENT_DEFINITIONS[Math.floor(Math.random() * AUTO_EVENT_DEFINITIONS.length)];
         autoEventInstruction = `
-[🚨 돌발 상황 발생 (SUDDEN EVENT TRIGGERED)]
-유형: ${event.title}
-지침: ${event.content}
-[IMPORTANT] 위 지침을 즉시 현재 서술에 반영하여 상황을 급변시키시오. 사용자에게 예고하지 말고 자연스럽게 서술 속에 녹여내시오.`;
-        console.log(`🎲 Auto-Event Triggered: ${event.title}`);
+[🚨 SUDDEN EVENT TRIGGERED: ${event.title}]
+${event.content}
+Apply this twist IMMEDIATELY to the current scene.`;
     }
 
-    const globalLoreStr = activeGlobal.entries.map(l => `[전역 설정: ${l.title}]\n${l.content}`).join('\n');
-    const worldLoreStr = activeWorld.entries.map(l => `[배경 설정: ${l.title}] ${l.content}`).join('\n');
-
-    const memoryPrompt = chat.memory && chat.memory.trim() !== '' ? `\n[장기 기억]\n${chat.memory}\n` : '';
+    // 로어북 문자열 변환
+    const globalLoreStr = activeGlobal.entries.map(l => `[Global Lore: ${l.title}]\n${l.content}`).join('\n');
+    const worldLoreStr = activeWorldLore.entries.map(l => `[World Lore: ${l.title}] ${l.content}`).join('\n');
     
-    let imageInstruction = "";
-    if (chat.novelImages && chat.novelImages.length > 0) {
-        imageInstruction = `\n[시각 자료 참고]\n첨부된 이미지를 바탕으로 장면의 미장센(분위기, 인물, 배경)을 텍스트로 구현하되, 소설의 문체에 맞게 자연스럽게 녹여내세요.\n`;
-    } else if (chat.novelImage) { 
-        imageInstruction = `\n[시각 자료 참고]\n첨부된 이미지를 바탕으로 장면의 미장센을 텍스트로 구현하세요.\n`;
-    }
+    const memoryPrompt = chat.memory && chat.memory.trim() !== '' ? `\n[Long-term Memory (Previous Context)]\n${chat.memory}\n` : '';
 
-    let systemPrompt;
-    
+    // Context 구성
+    let baseContext = "";
     if (chat.isNovelMode) {
-        const novelContext = chat.novelContent || '(이미지 기반 시나리오)';
-        const context = novelContext.substring(0, 100000); 
-        
-        systemPrompt = `당신은 소설 작성을 돕는 고지능 AI입니다.
-[배경] "${chat.title}" 기반.
-${memoryPrompt}
-${imageInstruction}
-
-[소설 원문]
----
-${context}
----
-
-[작성 규칙]
-1. 대화와 지문을 적절히 섞어 묘사.
-2. ${novelSettings}
-3. 사용자의 마지막 말에 이어 소설을 연재하듯 작성.
-
-[활성화된 설정 정보]
-${globalLoreStr}
-${worldLoreStr}
-
-[용어 가이드]
-${dicRules}
-
-[기본 지침]
-${enabledCoreRules};
-${autoEventInstruction}`;
+        baseContext = `[Context: Novel Mode]\nTitle: ${chat.title}\n${chat.novelContent.substring(0, 5000)}...`;
     } else {
-        if (!w) throw new Error("배경 없음");
-        
-        let userPrompt = "";
-        if (w.user) {
-            const uEntries = (w.user.entries || []).map(e => `- ${e.title}: ${e.content}`).join('\n');
-            userPrompt = `\n[주인공(User) 정보]\n이름: ${w.user.name}\n성별: ${w.user.gender}\n외모/특징: ${w.user.outfit || ''}, ${w.user.features || ''}\n${uEntries}`;
-        }
-
+        if (!w) throw new Error("배경 데이터 오류");
+        let userPrompt = w.user ? `[User Info]\nName: ${w.user.name}\nGender: ${w.user.gender}\n${w.user.outfit||''}\n${(w.user.entries||[]).map(e=>e.content).join(' ')}` : "";
         const activeChars = (w.characters||[]).filter(c=>(chat.characterIds||[]).includes(c.id));
-        const charPrompt = activeChars.map(c=> {
-            const cEntries = c.entries ? c.entries.map(e => `[${e.title}] ${e.content}`).join('\n') : '';
-            return `[등장인물: ${c.name}]\n성별: ${c.gender}\n외모: ${c.appearance_desc}\n성격/특징: ${c.features || c.personality_tags || ''}\n${cEntries}`;
+        // [수정] 캐릭터의 상세 설정(말투, 성벽, 내면 등)을 모두 포함하도록 개선
+        const charPrompt = activeChars.map(c => {
+            let p = `[Character: ${c.name}]`;
+            if (c.source_material) p += `\nSource: ${c.source_material}`;
+            p += `\nInfo: ${c.gender}, ${c.age}, ${c.personality_tags || ''}`;
+            
+            if (c.appearance_desc) p += `\nAppearance: ${c.appearance_desc}`;
+            if (c.body_type || c.three_sizes) p += `\nBody: ${c.body_type || ''} ${c.three_sizes ? '(' + c.three_sizes + ')' : ''}`;
+            
+            // 말투 및 대사
+            if (c.voice) p += `\nVoice Tone: ${c.voice}`;
+            if (c.sample_dialogue) p += `\n[Sample Dialogue]\n${c.sample_dialogue}`;
+            if (c.dialogue_depth) p += `\n[Dialogue Guideline (Depth)]\n${c.dialogue_depth}`;
+
+            // 성적/심리 설정 (데이터가 있는 경우에만 추가)
+            let sexTraits = [];
+            if (c.erogenous_zones) sexTraits.push(`Erogenous Zones: ${c.erogenous_zones}`);
+            if (c.fetish) sexTraits.push(`Fetish: ${c.fetish}`);
+            if (c.underwear) sexTraits.push(`Underwear: ${c.underwear}`);
+            if (c.perverted_features) sexTraits.push(`Traits: ${c.perverted_features}`);
+            
+            if (sexTraits.length > 0) p += `\n[Sexual Traits]\n${sexTraits.join('\n')}`;
+            
+            if (c.sexual_psyche) p += `\n[Inner Psyche & Corruption]\n${c.sexual_psyche}`;
+            if (c.sexual_behavior) p += `\n[Sexual Behavior Pattern]\n${c.sexual_behavior}`;
+
+            // 기타 entries
+            if (c.entries && c.entries.length > 0) {
+                p += `\n[Additional Settings]\n` + c.entries.map(e => e.content).join('\n');
+            }
+            
+            return p;
         }).join('\n\n');
 
-        const worldDesc = w.description ? `\n[배경 상세 설명]\n${w.description}` : '';
-        const worldAiRules = (w.aiRules || []).map(r => `[배경 전용 지침: ${r.title}] ${r.content}`).join('\n');
-
-        systemPrompt = `당신은 소설 AI입니다.
-[현재 배경: ${w.name}]${worldDesc}
-
-[활성화된 설정 (Triggered Lore)]
-${worldLoreStr}
-${globalLoreStr}
-
-${userPrompt}
-${charPrompt}
-${memoryPrompt}
-${imageInstruction}
-
-[규칙] 
-${novelSettings}
-
-[용어 및 표현 가이드]
-${dicRules}
-
-[배경 전용 지침]
-${worldAiRules}
-
-[핵심 지침]
-${enabledCoreRules};
-
-${autoEventInstruction}`;
+        baseContext = `[Context: Roleplay]\nWorld: ${w.name}\n${w.description}\n${userPrompt}\n${charPrompt}`;
     }
 
-    // 메시지 구성
+    // 최종 시스템 프롬프트 조립 [수정됨: worldRulesStr 추가]
+    const systemPrompt = `
+${baseContext}
+
+[Current Active Lore]
+${globalLoreStr}
+${worldLoreStr}
+
+${memoryPrompt}
+
+[GUIDELINES & SETTINGS]
+1. Role: Expert Novel AI. Write in ${SETTINGS.novelViewpoint}. Style: ${SETTINGS.novelStyle || '웹소설체'}.
+2. ${pacingPrompt}
+3. ${nsfwPrompt}
+4. ${lengthPrompt}
+5. ${attitudePrompt}
+6. Language: KOREAN (한국어).
+
+[Dictionaries & Core Rules]
+${dicRules}
+${enabledCoreRules}
+
+[World Rules (Must Follow)]
+${worldRulesStr}
+
+${autoEventInstruction}
+${multiChoicePrompt}
+
+IMPORTANT: Analyze the context and write the next part of the story. Adhere strictly to the settings above.
+`;
+
+    // 4. 메시지 구성 및 전송 (기존과 동일)
     let imageParts = []; 
     if (chat.novelImages && chat.novelImages.length > 0) {
         chat.novelImages.forEach(imgData => {
-            const base64Data = imgData.split(',')[1];
-            imageParts.push({ inlineData: { mimeType: 'image/jpeg', data: base64Data } });
+            imageParts.push({ inlineData: { mimeType: 'image/jpeg', data: imgData.split(',')[1] } });
         });
     }
 
     const fullHistory = chat.history.filter(h => h.role === 'user' || h.role === 'model')
-        .map(h => ({ 
-            role: h.role === 'user' ? 'user' : 'model', 
-            parts: [{ text: h.text || h.content }] 
-        }));
+        .map(h => ({ role: h.role === 'user' ? 'user' : 'model', parts: [{ text: h.text }] }));
 
     let contents = [...fullHistory];
-    if (imageParts.length > 0) {
-        contents.unshift({ role: 'user', parts: imageParts });
-    }
+    if (imageParts.length > 0) contents.unshift({ role: 'user', parts: imageParts });
 
-    // 디버그 데이터 저장
-    lastSentPrompt = JSON.stringify({
-        _note: "Smart Lorebook Active (No UI)",
-        active_triggers: allTriggers, // 이제 여기서 에러가 나지 않습니다.
-        system_instruction: systemPrompt,
-        contents: contents
-    }, (key, value) => {
-        if (key === 'data' && typeof value === 'string' && value.length > 100) {
-            return `<Base64 Image Data (Length: ${value.length}) - Omitted>`;
-        }
-        return value;
-    }, 2);
-    
+    lastSentPrompt = systemPrompt + "\n\n--- Last User Input ---\n" + (contents[contents.length-1]?.parts[0]?.text || '');
+
     const safetySettings = SETTINGS.uncensored 
         ? [ { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" }, { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" }, { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" }, { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" } ]
         : [ { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" } ];
 
-    const modelToUse = SETTINGS.currentModel || 'gemini-3-pro';
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${SETTINGS.apiKey}`;
-    
     const requestBody = {
         system_instruction: { parts: [{ text: systemPrompt }] },
         contents: contents,
         safetySettings: safetySettings,
         generationConfig: {
-            maxOutputTokens: SETTINGS.maxOutputTokens || 2000,
+            maxOutputTokens: SETTINGS.maxOutputTokens || 4000,
             temperature: SETTINGS.temperature || 0.9 
         }
     };
 
-    const res = await fetch(url, {
+    const modelToUse = SETTINGS.currentModel || 'gemini-3-pro';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${SETTINGS.apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
@@ -2772,15 +3249,11 @@ ${autoEventInstruction}`;
 
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
-    if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]) throw new Error("AI 응답 없음");
-
-    if (data.usageMetadata) {
-        lastTokenUsage = data.usageMetadata;
-    }
-
+    if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]) throw new Error("AI 응답 없음 (필터링됨)");
+    
+    if (data.usageMetadata) lastTokenUsage = data.usageMetadata;
     return data.candidates[0].content.parts[0].text;
 };
-
         
 async function generateChatSummary(chatId) {
     const chat = DB.chats.find(c => c.id === chatId);
@@ -3071,21 +3544,77 @@ function clearChat() {
             document.getElementById('core-max-token-val').innerText = currentTokens;
             /* ▲▲▲ [여기까지] ▲▲▲ */
             
+/* ... openCoreModal 함수 내부 ... */
+            
             const fontSize = SETTINGS.fontSize || 16;
             document.getElementById('font-size-slider').value = fontSize;
             document.getElementById('font-size-val').innerText = fontSize + 'px';
             document.getElementById('font-preview-text').style.fontSize = (fontSize/16) + 'rem';
             
-            document.getElementById('core-novel-point').value = SETTINGS.novelViewpoint || '3인칭 제한적 시점 (추천)';
-            document.getElementById('core-novel-style').value = SETTINGS.novelStyle || '웹소설체';
-            document.getElementById('core-novel-ratio').value = SETTINGS.novelRatio || '밸런스형';
+            // ▼▼▼ [삭제] 기존의 정적 요소 초기화 코드 3줄 삭제 ▼▼▼
+            // document.getElementById('core-novel-point').value = ... 
+            // document.getElementById('core-novel-style').value = ...
+            // document.getElementById('core-novel-ratio').value = ...
+            
+// openCoreModal 함수 내부에서 'core-tab-novel' 관련 부분만 아래 코드로 덮어씌워 주세요.
+const novelTab = document.getElementById('core-tab-novel');
+if (novelTab) {
+    const renderOpt = (key, opts) => opts.map(o => `<option value="${o}" ${SETTINGS[key]===o?'selected':''}>${o}</option>`).join('');
+    
+    novelTab.innerHTML = `
+        <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-4">소설 연출 상세 지침</h4>
+        
+        <div class="space-y-4">
+            <div><label class="block text-sm font-bold text-gray-700 dark:text-gray-400 mb-1">서술 호흡</label>
+            <select id="sync-novelPacing" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600">${renderOpt('novelPacing', ['빠른 전개 (사건 위주)', '보통 (밸런스)', '느린 전개 (세밀한 묘사)'])}</select></div>
 
-/* ▼▼▼ [3. 여기 붙여넣기] 설정 불러오기 로직 ▼▼▼ */
-            document.getElementById('auto-event-toggle').checked = SETTINGS.autoEventEnabled || false;
-            const eventChance = SETTINGS.autoEventChance !== undefined ? SETTINGS.autoEventChance : 10;
-            document.getElementById('auto-event-chance').value = eventChance;
-            document.getElementById('event-chance-display').innerText = eventChance + '%';
-/* ▲▲▲ [3. 여기까지] ▲▲▲ */
+            <div><label class="block text-sm font-bold text-gray-700 dark:text-gray-400 mb-1">수위 강도</label>
+            <select id="sync-nsfwLevel" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600">
+                ${renderOpt('nsfwLevel', ['전연령 (스킨십/키스)', '노멀 (성관계 해금)', '고수위 (자극적/적나라함)', '초고수위 (에로게/동인지)'])}
+            </select></div>
+            <div><label class="block text-sm font-bold text-gray-700 dark:text-gray-400 mb-1">캐릭터 태도</label>
+            <select id="sync-charAttitude" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600">${renderOpt('charAttitude', ['철벽 (차가움/방어적)', '도도함 (오만/내려다봄)', '보통 (일반적)', '적극적 (유혹/리드)', '금사빠 (맹목적 애정)'])}</select></div>
+
+            <div><label class="block text-sm font-bold text-gray-700 dark:text-gray-400 mb-1">1회 출력 분량</label>
+            <select id="sync-outputLength" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600">${renderOpt('outputLength', ['짧게 (10문장 내외)', '보통 (30문장 내외)', '길게 (50문장 내외)'])}</select></div>
+
+            <div><label class="block text-sm font-bold text-gray-700 dark:text-gray-400 mb-1">서술 시점 (Viewpoint)</label>
+            <select id="core-novel-point" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600">
+                ${renderOpt('novelViewpoint', ['3인칭 제한적 시점 (추천)', '3인칭 제한적 (히로인 내면)', '1인칭 주인공 시점', '3인칭 관찰자 시점', '3인칭 전지적 작가 시점'])}
+            </select></div>
+            
+            <div><label class="block text-sm font-bold text-gray-700 dark:text-gray-400 mb-1">문체 스타일</label>
+            <select id="core-novel-style" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600">
+                    ${renderOpt('novelStyle', ['웹소설체', '간결/건조체', '만연/화려체'])}
+            </select></div>
+
+            <div class="flex items-center justify-between p-3 bg-indigo-50 dark:bg-slate-800 border border-indigo-100 dark:border-slate-700 rounded-lg">
+                <label class="font-bold text-indigo-900 dark:text-indigo-300 text-sm"><i class="fa-solid fa-list-ol mr-1"></i>4지선다 선택지 자동 생성</label>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="core-multi-choice-toggle" class="sr-only peer" ${SETTINGS.enableMultiChoice ? 'checked' : ''}>
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-slate-500 dark:border-slate-400 border border-gray-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+            </div>
+
+            <div class="p-3 bg-red-50 dark:bg-slate-800 border border-red-100 dark:border-red-900 rounded-lg">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="font-bold text-red-800 dark:text-red-400 text-sm"><i class="fa-solid fa-bolt mr-1"></i>돌발 이벤트 (Auto-Event)</label>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-red-600 font-bold" id="event-chance-display">${SETTINGS.autoEventChance||10}%</span>
+                        <input type="range" id="auto-event-chance" min="0" max="50" step="5" value="${SETTINGS.autoEventChance||10}" class="w-24 accent-red-600 cursor-pointer" oninput="document.getElementById('event-chance-display').innerText = this.value + '%'">
+                        <input type="checkbox" id="auto-event-toggle" class="w-5 h-5 text-red-600 rounded focus:ring-red-500 cursor-pointer" ${SETTINGS.autoEventEnabled?'checked':''}>
+                    </div>
+                </div>
+                <p class="text-xs text-red-700 dark:text-gray-400 opacity-80 leading-snug">
+                    대화 진행 중 AI가 무작위로 '위기'나 '신체 변수'를 발생시킵니다.
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+            renderCoreRules(); renderDicRules(); 
+            // ... (이후 코드 계속)
             
             renderCoreRules(); renderDicRules(); 
 
@@ -3129,27 +3658,51 @@ renderMacroSettings();
         function applyFontSize(px) { document.documentElement.style.setProperty('--novel-font-size', (px/16) + 'rem'); }
 
 function saveCoreSettings() { 
-            SETTINGS.apiKey = document.getElementById('core-api-key').value; 
-            SETTINGS.currentModel = document.getElementById('core-model-select').value; 
-            
-            SETTINGS.uncensored = document.getElementById('core-safety-toggle').checked;
-            SETTINGS.typingSpeed = parseInt(document.getElementById('core-speed-select').value);
-            SETTINGS.fontSize = parseInt(document.getElementById('font-size-slider').value);
-            SETTINGS.novelViewpoint = document.getElementById('core-novel-point').value;
-            SETTINGS.novelStyle = document.getElementById('core-novel-style').value;
-            SETTINGS.novelRatio = document.getElementById('core-novel-ratio').value;
-            
-/* ▼▼▼ [4. 여기 붙여넣기] 설정 저장 로직 ▼▼▼ */
-            SETTINGS.autoEventEnabled = document.getElementById('auto-event-toggle').checked;
-            SETTINGS.autoEventChance = parseInt(document.getElementById('auto-event-chance').value);
-/* ▲▲▲ [4. 여기까지] ▲▲▲ */
+    try {
+        SETTINGS.apiKey = document.getElementById('core-api-key').value; 
+        SETTINGS.currentModel = document.getElementById('core-model-select').value; 
+        SETTINGS.uncensored = document.getElementById('core-safety-toggle').checked;
+        SETTINGS.typingSpeed = parseInt(document.getElementById('core-speed-select').value);
+        SETTINGS.fontSize = parseInt(document.getElementById('font-size-slider').value);
+        
+        // 동기화된 새 설정값들
+        if(document.getElementById('sync-novelPacing')) SETTINGS.novelPacing = document.getElementById('sync-novelPacing').value;
+        if(document.getElementById('sync-nsfwLevel')) SETTINGS.nsfwLevel = document.getElementById('sync-nsfwLevel').value;
+        if(document.getElementById('sync-charAttitude')) SETTINGS.charAttitude = document.getElementById('sync-charAttitude').value;
+        if(document.getElementById('sync-outputLength')) SETTINGS.outputLength = document.getElementById('sync-outputLength').value;
+        
+        // [추가됨] 4지선다 설정 저장
+        const multiChoiceEl = document.getElementById('core-multi-choice-toggle');
+        if(multiChoiceEl) SETTINGS.enableMultiChoice = multiChoiceEl.checked;
 
-// saveCoreSettings 함수 안쪽에 추가
-SETTINGS.maxOutputTokens = parseInt(document.getElementById('core-max-token-slider').value);
+        // 기존 설정 저장
+        const pointEl = document.getElementById('core-novel-point');
+        if(pointEl) SETTINGS.novelViewpoint = pointEl.value;
+        
+        const styleEl = document.getElementById('core-novel-style');
+        if(styleEl) SETTINGS.novelStyle = styleEl.value;
+        
+        // 자동 이벤트 설정
+        const autoEventToggle = document.getElementById('auto-event-toggle');
+        if(autoEventToggle) SETTINGS.autoEventEnabled = autoEventToggle.checked;
+        
+        const autoEventChance = document.getElementById('auto-event-chance');
+        if(autoEventChance) SETTINGS.autoEventChance = parseInt(autoEventChance.value);
 
-            saveSettings(); closeModal('core-modal'); 
-        }
+        // 토큰 설정
+        const tokenSlider = document.getElementById('core-max-token-slider');
+        if(tokenSlider) SETTINGS.maxOutputTokens = parseInt(tokenSlider.value);
 
+        saveSettings(); 
+        closeModal('core-modal'); 
+        
+        renderRightSidebar();
+        
+    } catch(e) {
+        console.error(e);
+        alert("설정 저장 중 오류가 발생했습니다: " + e.message);
+    }
+}
 
         function switchCoreTab(t) { 
             document.querySelectorAll('.core-tab-content').forEach(e => e.classList.add('hidden')); 
@@ -3173,40 +3726,49 @@ SETTINGS.maxOutputTokens = parseInt(document.getElementById('core-max-token-slid
             }
         }
         
-        function renderCoreRules() { 
-            const l=document.getElementById('core-rules-list'); l.innerHTML=''; 
-            SETTINGS.coreRules.forEach((r,i)=> {
-                const isEnabled = r.enabled !== false;
-                l.innerHTML+=`<div class="rule-item border bg-gray-50 mb-2 rounded overflow-hidden collapsed ${isEnabled?'':'disabled'}">
-                    <div class="rule-header flex justify-between items-center p-3 bg-gray-100 cursor-pointer">
-                        <div class="flex items-center gap-2">
-                             <input type="checkbox" ${isEnabled?'checked':''} onclick="event.stopPropagation(); SETTINGS.coreRules[${i}].enabled = this.checked; renderCoreRules();" class="w-4 h-4 cursor-pointer">
-                            <span class="font-bold text-sm flex items-center gap-2" onclick="this.closest('.rule-item').classList.toggle('collapsed')"><i class="fa-solid fa-chevron-down text-gray-500"></i>${r.title||'규칙 '+(i+1)}</span>
-                        </div>
-                        <button onclick="event.stopPropagation(); SETTINGS.coreRules.splice(${i},1);renderCoreRules()" class="text-red-500 hover:text-red-700 text-xs font-bold">삭제</button>
-                    </div>
-                    <div class="rule-content p-3 border-t">
-                        <input class="w-full mb-2 p-2 border rounded text-sm" value="${r.title}" placeholder="제목" onchange="SETTINGS.coreRules[${i}].title=this.value">
-                        <textarea class="w-full p-2 border rounded text-sm h-32" onchange="SETTINGS.coreRules[${i}].content=this.value">${r.content}</textarea>
-                    </div>
-                </div>`;
-            });
-        }
-        function renderDicRules() { 
-            const l=document.getElementById('core-dic-list'); l.innerHTML=''; 
-            SETTINGS.dicRules.forEach((r,i)=> {
-                l.innerHTML+=`<div class="rule-item border bg-gray-50 mb-2 rounded overflow-hidden collapsed">
-                    <div class="rule-header flex justify-between items-center p-3 bg-gray-100 cursor-pointer" onclick="this.parentElement.classList.toggle('collapsed')">
-                        <span class="font-bold text-sm"><i class="fa-solid fa-chevron-down mr-2 text-gray-500"></i>${r.title||'용어 '+(i+1)}</span>
-                        <button onclick="event.stopPropagation(); SETTINGS.dicRules.splice(${i},1);renderDicRules()" class="text-red-500 hover:text-red-700 text-xs font-bold">삭제</button>
-                    </div>
-                    <div class="rule-content p-3 border-t">
-                        <input class="w-full mb-2 p-2 border rounded text-sm" value="${r.title}" placeholder="용어" onchange="SETTINGS.dicRules[${i}].title=this.value">
-                        <textarea class="w-full p-2 border rounded text-sm h-32" onchange="SETTINGS.dicRules[${i}].content=this.value">${r.content}</textarea>
-                    </div>
-                </div>`;
-            });
-        }
+/* ▼▼▼ [수정됨] AI 핵심 지침 렌더링 (리사이즈 핸들 추가) ▼▼▼ */
+function renderCoreRules() { 
+    const l=document.getElementById('core-rules-list'); l.innerHTML=''; 
+    SETTINGS.coreRules.forEach((r,i)=> {
+        const isEnabled = r.enabled !== false;
+        l.innerHTML+=`<div class="rule-item border bg-gray-50 mb-2 rounded overflow-hidden collapsed ${isEnabled?'':'disabled'}">
+            <div class="rule-header flex justify-between items-center p-3 bg-gray-100 cursor-pointer">
+                <div class="flex items-center gap-2">
+                        <input type="checkbox" ${isEnabled?'checked':''} onclick="event.stopPropagation(); SETTINGS.coreRules[${i}].enabled = this.checked; renderCoreRules();" class="w-4 h-4 cursor-pointer">
+                    <span class="font-bold text-sm flex items-center gap-2" onclick="this.closest('.rule-item').classList.toggle('collapsed')"><i class="fa-solid fa-chevron-down text-gray-500"></i>${r.title||'규칙 '+(i+1)}</span>
+                </div>
+                <button onclick="event.stopPropagation(); SETTINGS.coreRules.splice(${i},1);renderCoreRules()" class="text-red-500 hover:text-red-700 text-xs font-bold">삭제</button>
+            </div>
+            <div class="rule-content p-3 border-t">
+                <input class="w-full mb-2 p-2 border rounded text-sm" value="${r.title}" placeholder="제목" onchange="SETTINGS.coreRules[${i}].title=this.value">
+                <textarea class="w-full p-2 border rounded text-sm h-32" onchange="SETTINGS.coreRules[${i}].content=this.value">${r.content}</textarea>
+            </div>
+        </div>`;
+    });
+    
+    // [추가됨] 생성된 모든 textarea에 리사이즈 핸들 부착
+    l.querySelectorAll('textarea').forEach(el => makeResizable(el));
+}
+
+/* ▼▼▼ [수정됨] 용어/표현 지침 렌더링 (리사이즈 핸들 추가) ▼▼▼ */
+function renderDicRules() { 
+    const l=document.getElementById('core-dic-list'); l.innerHTML=''; 
+    SETTINGS.dicRules.forEach((r,i)=> {
+        l.innerHTML+=`<div class="rule-item border bg-gray-50 mb-2 rounded overflow-hidden collapsed">
+            <div class="rule-header flex justify-between items-center p-3 bg-gray-100 cursor-pointer" onclick="this.parentElement.classList.toggle('collapsed')">
+                <span class="font-bold text-sm"><i class="fa-solid fa-chevron-down mr-2 text-gray-500"></i>${r.title||'용어 '+(i+1)}</span>
+                <button onclick="event.stopPropagation(); SETTINGS.dicRules.splice(${i},1);renderDicRules()" class="text-red-500 hover:text-red-700 text-xs font-bold">삭제</button>
+            </div>
+            <div class="rule-content p-3 border-t">
+                <input class="w-full mb-2 p-2 border rounded text-sm" value="${r.title}" placeholder="용어" onchange="SETTINGS.dicRules[${i}].title=this.value">
+                <textarea class="w-full p-2 border rounded text-sm h-32" onchange="SETTINGS.dicRules[${i}].content=this.value">${r.content}</textarea>
+            </div>
+        </div>`;
+    });
+    
+    // [추가됨] 생성된 모든 textarea에 리사이즈 핸들 부착
+    l.querySelectorAll('textarea').forEach(el => makeResizable(el));
+}
         
         function addEntryUI(id, data) { if(id==='core-rules-list') SETTINGS.coreRules.push(data); else SETTINGS.dicRules.push(data); if(id==='core-rules-list') renderCoreRules(); else renderDicRules(); }
         function openMemoryModal() { if(currentSessionId) { document.getElementById('memory-input').value = DB.chats.find(c=>c.id===currentSessionId).memory||''; openModalInternal('memory-modal'); } }
@@ -3221,23 +3783,71 @@ SETTINGS.maxOutputTokens = parseInt(document.getElementById('core-max-token-slid
         function openTextareaEditor(btn) { activeTextareaTarget = btn.closest('div').querySelector('textarea'); document.getElementById('modal-textarea-input').value = activeTextareaTarget.value; openModalInternal('textarea-editor-modal'); }
         function saveAndCloseTextareaEditor() { if(activeTextareaTarget) activeTextareaTarget.value = document.getElementById('modal-textarea-input').value; closeModal('textarea-editor-modal'); }
         
-        function addGlobalLoreFromSidebar() { 
-            if (!SETTINGS.globalLorebook) SETTINGS.globalLorebook = [];
-            SETTINGS.globalLorebook.push({id:Date.now(),title:'새 로어',keywords:'',content:''}); saveSettings(); renderRightSidebar(); 
-        }
+function addGlobalLoreFromSidebar() {
+    if (!SETTINGS.globalLorebook) SETTINGS.globalLorebook = [];
+    
+    // 빈 로어 생성
+    SETTINGS.globalLorebook.push({ id: Date.now(), title: '새 로어', keywords: '', content: '' });
+    saveSettings();
+    renderRightSidebar();
+    
+    // 방금 생성한 로어의 에디터 즉시 열기
+    editGlobalLore(SETTINGS.globalLorebook.length - 1);
+}
 
-        function editGlobalLore(idx) {
-            const lore = SETTINGS.globalLorebook[idx];
-            const newTitle = prompt("제목 수정", lore.title);
-            if(newTitle !== null) {
-                lore.title = newTitle;
-                const newKeys = prompt("키워드 (콤마로 구분)", lore.keywords);
-                if(newKeys !== null) lore.keywords = newKeys;
-                const newContent = prompt("내용", lore.content);
-                if(newContent !== null) lore.content = newContent;
-                saveSettings(); renderRightSidebar();
-            }
+function editGlobalLore(idx) {
+    const lore = SETTINGS.globalLorebook[idx];
+    const body = document.getElementById('modal-body');
+
+    // 1. 에디터 UI 주입 (제목, 키워드, 내용 입력창)
+    body.innerHTML = `
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">로어 제목</label>
+                <input id="quick-lore-title" type="text" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500" value="${String(lore.title || '').replace(/"/g, '&quot;')}" placeholder="예: 마법 체계, 제국 역사">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-400 mb-1">감지 키워드 (콤마로 구분)</label>
+                <input id="quick-lore-keys" type="text" class="w-full p-2 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 text-sm focus:ring-2 focus:ring-indigo-500" value="${String(lore.keywords || '').replace(/"/g, '&quot;')}" placeholder="비워두면 항상 적용">
+                <p class="text-[10px] text-gray-400 mt-1">* 대화나 지문에 이 단어가 등장할 때만 AI에게 설정이 주입됩니다.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">내용</label>
+                <textarea id="quick-lore-content" rows="15" class="w-full p-3 border rounded-lg bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 resize-none text-sm leading-relaxed focus:ring-2 focus:ring-indigo-500" placeholder="상세 설정을 입력하세요...">${lore.content || ''}</textarea>
+            </div>
+        </div>
+    `;
+
+    // 2. 모달 설정
+    document.getElementById('modal-title').innerText = "글로벌 로어북 수정";
+    document.getElementById('modal-delete-btn').classList.add('hidden');
+    document.getElementById('btn-gen-details').classList.add('hidden');
+
+    // 3. 저장 로직
+    document.getElementById('modal-save-btn').onclick = () => {
+        const titleVal = document.getElementById('quick-lore-title').value.trim();
+        if (!titleVal) return alert("제목을 입력해주세요.");
+
+        SETTINGS.globalLorebook[idx].title = titleVal;
+        SETTINGS.globalLorebook[idx].keywords = document.getElementById('quick-lore-keys').value;
+        SETTINGS.globalLorebook[idx].content = document.getElementById('quick-lore-content').value;
+
+        saveSettings();
+        renderRightSidebar();
+        closeModal('editor-modal');
+    };
+
+    // 4. 모달 열기 및 기능 활성화
+    openModalInternal('editor-modal');
+    setTimeout(() => {
+        const textarea = document.getElementById('quick-lore-content');
+        if (textarea) {
+            textarea.focus();
+            makeResizable(textarea); // 리사이즈 핸들 부착
         }
+    }, 50);
+}
+
         function deleteGlobalLore(idx) { if(confirm("삭제하시겠습니까?")) { SETTINGS.globalLorebook.splice(idx, 1); saveSettings(); renderRightSidebar(); } }
 
 // [수정] 기존 showLastPrompt 함수를 이걸로 통째로 교체하세요
@@ -3318,46 +3928,45 @@ SETTINGS.maxOutputTokens = parseInt(document.getElementById('core-max-token-slid
             }
         }
 
-/* --- [수정] AI 자동 요약 기능 (로딩 스피너 적용) --- */
+/* ▼▼▼ [수정됨] 3단계: 장기 기억 + 최근 대화 통합 요약 함수 ▼▼▼ */
 async function generateAutoSummary() {
     if(!currentSessionId) return alert("대화 내용이 없습니다.");
     if(!SETTINGS.apiKey) return alert("API 키가 필요합니다.");
     
-    if(!confirm("AI가 대화 내용을 요약하여 현재 입력창에 덮어씁니다.\n(기존 대화 로그는 삭제되지 않습니다.)")) return;
+    if(!confirm("현재까지의 대화 내용을 분석하여 '장기 기억'을 갱신합니다.\n(기존 기억과 최근 대화를 병합합니다.)")) return;
 
     const textarea = document.getElementById('memory-input');
-    const loadingOverlay = document.getElementById('modal-loading-overlay-memory'); // 오버레이 요소
+    const loadingOverlay = document.getElementById('modal-loading-overlay-memory');
     const chat = DB.chats.find(c => c.id === currentSessionId);
     
-    // 최근 30턴만 분석
-    const recentHistory = chat.history.slice(-30).map(m => `[${m.role}]: ${m.text}`).join('\n');
+    const existingMemory = chat.memory || "없음";
+    const recentHistory = chat.history.slice(-20).map(m => `[${m.role}]: ${m.text}`).join('\n'); // 최근 20턴 참조
 
-    // 1. 로딩 시작
     loadingOverlay.classList.remove('hidden');
     loadingOverlay.classList.add('flex');
-    
-    // (선택 사항) 텍스트 영역 비활성화는 오버레이가 막아주므로 굳이 안 해도 되지만, 안전을 위해 유지 가능
-    // textarea.disabled = true; 
 
     const prompt = `
-    Analyze the following RP/Novel chat history and summarize it for 'Long-term Memory'.
+    You are a Memory Manager for a novel.
     
-    [Summary Rules for Adult Novel]
-    1. **Hierarchy & Dynamics**: Who is dominant? (e.g., Force -> Submission)
-    2. **Physical Progress**: Virginity loss, sensitive zones, marks.
-    3. **Corruption Status**: Mental shift (Shame -> Pleasure).
-    4. **Current Context**: Where are they now? What are they doing?
-    5. **Language**: **KOREAN (한국어)**.
-    6. **Style**: Dry, factual, concise summary.
+    Task: Update the 'Long-term Memory' by merging the [Existing Memory] with the [Recent Conversation].
     
-    [Chat History]
-    ${recentHistory}`;
+    [Existing Memory]
+    ${existingMemory}
+    
+    [Recent Conversation]
+    ${recentHistory}
+    
+    [Instructions]
+    1. Summarize major events, revealed secrets, and relationship changes.
+    2. Remove obsolete info (e.g., solved problems).
+    3. Keep it concise but detailed enough for context.
+    4. Language: KOREAN (한국어).
+    
+    Output the updated memory text only.`;
 
     try {
         const modelToUse = SETTINGS.currentModel || 'gemini-3-pro';
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${SETTINGS.apiKey}`;
-        
-        const response = await fetch(url, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${SETTINGS.apiKey}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -3374,21 +3983,17 @@ async function generateAutoSummary() {
         const data = await response.json();
         if (data.candidates && data.candidates[0].content) {
             textarea.value = data.candidates[0].content.parts[0].text;
-            showMessage("요약이 완료되었습니다.");
+            showMessage("장기 기억이 갱신되었습니다.");
         } else {
             throw new Error("AI 응답 없음");
         }
-
     } catch (e) {
         alert("요약 실패: " + e.message);
     } finally {
-        // 2. 로딩 종료 (무조건 실행)
         loadingOverlay.classList.add('hidden');
         loadingOverlay.classList.remove('flex');
-        // textarea.disabled = false;
     }
 }
-
 
 /* --- [추가] 스마트 로어북 감지 엔진 --- */
 function detectActiveLore(allEntries, contextText) {
